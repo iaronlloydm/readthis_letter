@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Click Slideshow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --accent: #38bdf8;
+      --text: #ffffff;
+      --dim: rgba(255,255,255,0.65);
+      --shadow: rgba(0,40,80,0.4);
+    }
+ 
+    body {
+      min-height: 100vh;
+      background: #e0f2fe;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+ 
+    #bg {
+      position: fixed;
+      inset: -40px;
+      background-size: cover;
+      background-position: center;
+      filter: blur(28px) brightness(0.75) saturate(1.2);
+      transform: scale(1.08);
+      transition: background-image 0.9s ease, filter 0.9s ease;
+      z-index: 0;
+    }
+ 
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(186,230,255,0.2) 30%, rgba(7,89,133,0.45) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+ 
+    #counter {
+      position: fixed;
+      top: 28px;
+      right: 36px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: var(--dim);
+      z-index: 10;
+      text-transform: uppercase;
+    }
+ 
+    #title {
+      position: fixed;
+      top: 28px;
+      left: 36px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      color: var(--dim);
+      z-index: 10;
+      text-transform: uppercase;
+    }
+ 
+    #card {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+ 
+    #img-wrap {
+      position: relative;
+      width: min(72vw, 520px);
+      aspect-ratio: 9/10;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(56,189,248,0.35),
+        0 30px 80px rgba(7,89,133,0.45),
+        0 8px 20px rgba(7,89,133,0.3);
+    }
+ 
+    #img-main {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+ 
+    #img-main.fade {
+      opacity: 0;
+      transform: scale(1.03);
+    }
+ 
+    #img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    #card:hover #img-wrap::after { opacity: 1; }
+ 
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(56,189,248,0.35);
+      transform: scale(0);
+      animation: ripple-anim 0.6s linear;
+      pointer-events: none;
+    }
+    @keyframes ripple-anim {
+      to { transform: scale(4); opacity: 0; }
+    }
+ 
+    #hint {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.75);
+      text-transform: uppercase;
+      transition: opacity 0.4s;
+    }
+    #hint svg { width: 13px; opacity: 0.7; }
+ 
+    #desc-wrap {
+      width: min(72vw, 520px);
+      margin-top: 0;
+      background: #ffffff;
+      border: 1px solid rgba(56,189,248,0.35);
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      padding: 18px 24px 20px;
+      backdrop-filter: blur(6px);
+      transition: opacity 0.4s ease;
+    }
+ 
+    #desc-wrap.fade { opacity: 0; }
+ 
+    #desc-location {
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #0369a1;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+ 
+    #desc-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 300;
+      color: #0c4a6e;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+    }
+ 
+    #desc-body {
+      font-size: 0.72rem;
+      line-height: 1.7;
+      color: #075985;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+ 
+    #dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 22px;
+      z-index: 5;
+      position: relative;
+    }
+ 
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(7,89,133,0.25);
+      transition: background 0.4s, transform 0.4s;
+      cursor: pointer;
+    }
+    .dot.active {
+      background: var(--accent);
+      transform: scale(1.5);
+    }
+ 
+    #progress {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #0ea5e9);
+      transition: width 0.55s ease;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+ 
+  <div id="bg"></div>
+  <div id="title">Marron</div>
+  <div id="counter">1 / 7</div>
+  <div id="progress"></div>
+ 
+  <div id="card" onclick="nextSlide(event)">
+    <div id="img-wrap">
+      <img id="img-main" src="" alt="Slide image"/>
+      <div id="hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+        Click to advance
+      </div>
+    </div>
+    <div id="desc-wrap">
+      <div id="desc-location"></div>
+      <div id="desc-title"></div>
+      <div id="desc-body"></div>
+    </div>
+  </div>
+ 
+  <div id="dots"></div>
+ 
+  <script>
+    const slides = [
+      {
+        url: "uno.jpg",
+        location: "Pasay City, December 20, 2025",
+        title: "Our first proper date",
+        desc: "It was our first proper date, sinamahan mo ako to get my glasses. It was also the first time we hold hands together. I took this pic secretly :3"
+      },
+      {
+        url: "pasko.jpg",
+        location: "Imus City, December 23, 2025",
+        title: "First Lego Date",
+        desc: "We bought those cheap legos sa KKB, but building it with you made a difference. Naglakad pa tayo after hehehehe I had so much fun ^^ "
+      },
+      {
+        url: "samg.jpg",
+        location: "Kawit, February 13, 2026",
+        title: "Samgyupsal Date with youuuu",
+        desc: "I'm glad we decided to go here, dami natin nakain nakalimutan ko pa tumbler ko. I hope you like my gift babyy"
+      },
+      {
+        url: "tres.webp",
+        location: "Pasay City, February 14, 2026",
+        title: "Happy Valentines Day 💞",
+        desc: "I can say one of the days in my life where I was sooo happy from early January I started planning, and making ung website, and also struggling to keep it secret HAHAHHAHA. I'm glad you are part of it babyy. Thank you ulit sa mga gifts!!"
+      },
+      {
+        url: "lego.jpg",
+        location: "Imus City, February 16, 2026",
+        title: "Post Valentines Day Lego Date 🥰",
+        desc: "I had so much fun here kasi first time ko rin magbuild ng actual legos, Immediately kasi naisip ko na we had to do a lego date and I'm glad we manage to build it babyy. Tell moby I send my regards HAHAHHAHHA"
+      },
+      {
+        url: "maple.webp",
+        location: "General Trias, February 27, 2026",
+        title: "Maple Date with my babyy",
+        desc: "Had so much fun with this one. Ung food, environment, and just enjoying everything with you made that day very special."
+      },
+      {
+        url: "flower.png",
+        location: "Philippines",
+        title: "Flowersssss 💐💐",
+        desc: "I like giving you flowers baby heheheh "
+      },
+      {
+        url: "coll.jpg",
+        location: "Cavite",
+        title: "Goooodmorning babyy",
+        desc: "Goooodmorning baby, I collected them all and put it in a single picture :))"
+      }
+    ];
+ 
+    let current = 0;
+    let animating = false;
+ 
+    const bg       = document.getElementById('bg');
+    const imgMain  = document.getElementById('img-main');
+    const descLoc  = document.getElementById('desc-location');
+    const descTit  = document.getElementById('desc-title');
+    const descBody = document.getElementById('desc-body');
+    const descWrap = document.getElementById('desc-wrap');
+    const counter  = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    const dotsEl   = document.getElementById('dots');
+    const hint     = document.getElementById('hint');
+ 
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', e => { e.stopPropagation(); goTo(i); });
+      dotsEl.appendChild(d);
+    });
+ 
+    function updateDots() {
+      document.querySelectorAll('.dot').forEach((d, i) =>
+        d.classList.toggle('active', i === current));
+    }
+ 
+    function setSlide(idx, instant) {
+      const s = slides[idx];
+      if (instant) {
+        bg.style.backgroundImage = `url('${s.url}')`;
+        imgMain.src = s.url;
+        descLoc.textContent  = s.location;
+        descTit.textContent  = s.title;
+        descBody.textContent = s.desc;
+        counter.textContent  = `${idx + 1} / ${slides.length}`;
+        progress.style.width = `${((idx + 1) / slides.length) * 100}%`;
+        updateDots();
+        return;
+      }
+ 
+      animating = true;
+      imgMain.classList.add('fade');
+      descWrap.classList.add('fade');
+ 
+      setTimeout(() => {
+        bg.style.backgroundImage = `url('${s.url}')`;
+        imgMain.src = s.url;
+        descLoc.textContent  = s.location;
+        descTit.textContent  = s.title;
+        descBody.textContent = s.desc;
+        counter.textContent  = `${idx + 1} / ${slides.length}`;
+        progress.style.width = `${((idx + 1) / slides.length) * 100}%`;
+        updateDots();
+ 
+        imgMain.classList.remove('fade');
+        descWrap.classList.remove('fade');
+ 
+        setTimeout(() => { animating = false; }, 300);
+      }, 450);
+    }
+ 
+    function goTo(idx) {
+      if (animating || idx === current) return;
+      current = idx;
+      setSlide(current, false);
+    }
+ 
+    function nextSlide(e) {
+      if (animating) return;
+ 
+      const wrap  = document.getElementById('img-wrap');
+      const rect  = wrap.getBoundingClientRect();
+      const rip   = document.createElement('span');
+      rip.className = 'ripple';
+      const size  = Math.max(rect.width, rect.height);
+      rip.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+      wrap.appendChild(rip);
+      rip.addEventListener('animationend', () => rip.remove());
+
+      // If on the last slide, redirect to next.html
+      if (current === slides.length - 1) {
+        progress.style.width = '100%';
+        setTimeout(() => { window.location.href = 'pagetwo.html'; }, 500);
+        return;
+      }
+ 
+      current = (current + 1) % slides.length;
+      setSlide(current, false);
+ 
+      hint.style.opacity = '0';
+    }
+ 
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide({ clientX: window.innerWidth/2, clientY: window.innerHeight/2 });
+      if (e.key === 'ArrowLeft') goTo((current - 1 + slides.length) % slides.length);
+    });
+ 
+    setSlide(0, true);
+    progress.style.width = `${(1 / slides.length) * 100}%`;
+  </script>
+</body>
+</html>

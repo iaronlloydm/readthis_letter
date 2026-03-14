@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Coline 🌹</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rose: #c0392b;
+      --rose-light: #e74c3c;
+      --rose-pale: #f9e6e6;
+      --rose-deep: #7b1e1e;
+      --cream: #fdf6f0;
+      --gold: #c9a84c;
+      --text: #2c1810;
+      --text-soft: #6b3a2a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    .petals-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -60px;
+      font-size: 1.2rem;
+      opacity: 0;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+      80%  { opacity: 0.5; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+    }
+
+    #hero {
+      background: radial-gradient(ellipse at 60% 40%, #ffe4e4 0%, var(--cream) 70%);
+      text-align: center;
+    }
+
+    .rose-bloom {
+      font-size: clamp(5rem, 15vw, 9rem);
+      animation: bloom 3s ease-out forwards, float 4s ease-in-out 3s infinite;
+      display: inline-block;
+      filter: drop-shadow(0 8px 24px rgba(192,57,43,0.3));
+    }
+    @keyframes bloom {
+      0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+      60%  { transform: scale(1.15) rotate(5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      font-style: italic;
+      color: var(--rose-deep);
+      margin-top: 16px;
+      opacity: 0;
+      animation: riseIn 1.2s ease-out 0.8s forwards;
+      letter-spacing: 0.02em;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-soft);
+      margin-top: 10px;
+      font-style: italic;
+      letter-spacing: 0.12em;
+      opacity: 0;
+      animation: riseIn 1.2s ease-out 1.4s forwards;
+    }
+    .scroll-hint {
+      margin-top: 48px;
+      font-size: 0.85rem;
+      color: var(--rose);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: riseIn 1s ease-out 2.5s forwards, pulse 2s ease-in-out 3.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: translateY(0); }
+      50%       { opacity: 1; transform: translateY(4px); }
+    }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 auto 48px;
+      width: 100%;
+      max-width: 480px;
+      opacity: 0;
+      animation: riseIn 1s ease-out 0.3s forwards;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .divider-icon { color: var(--rose); font-size: 1.1rem; }
+
+    .story-card {
+      background: white;
+      border-radius: 4px;
+      padding: 52px clamp(24px, 6vw, 64px);
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 4px 60px rgba(192,57,43,0.08), 0 1px 3px rgba(0,0,0,0.06);
+      border-top: 3px solid var(--rose);
+      position: relative;
+      overflow: hidden;
+    }
+    .story-card::before {
+      content: '"';
+      font-family: 'Playfair Display', serif;
+      font-size: 18rem;
+      color: var(--rose-pale);
+      position: absolute;
+      top: -60px; left: 10px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .story-text {
+      font-size: clamp(1.05rem, 2vw, 1.2rem);
+      line-height: 1.95;
+      color: var(--text);
+      font-weight: 300;
+      position: relative;
+      z-index: 1;
+    }
+
+    .roses-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 28px 0;
+    }
+    .rose-item {
+      font-size: 2rem;
+      opacity: 0;
+      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes popIn {
+      from { transform: scale(0) rotate(-20deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    #question {
+      background: radial-gradient(ellipse at 50% 60%, #ffe8e8 0%, var(--cream) 65%);
+      text-align: center;
+    }
+    .question-rose {
+      font-size: clamp(4rem, 12vw, 7rem);
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 6px 20px rgba(192,57,43,0.35));
+      margin-bottom: 24px;
+    }
+    .question-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-style: italic;
+      color: var(--rose-deep);
+      line-height: 1.4;
+      margin-bottom: 48px;
+      max-width: 560px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 16px 40px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-yes {
+      background: var(--rose);
+      color: white;
+      box-shadow: 0 4px 24px rgba(192,57,43,0.35);
+    }
+    .btn-yes:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 32px rgba(192,57,43,0.5);
+    }
+    .btn-no {
+      background: transparent;
+      color: var(--text-soft);
+      border: 1px solid #d4b0a0;
+    }
+    .btn-no:hover { transform: translateY(-2px); }
+
+    #yes-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(123,30,30,0.96);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .yes-overlay-active { display: flex !important; }
+
+    .yes-roses {
+      font-size: clamp(3rem, 8vw, 5rem);
+      letter-spacing: 8px;
+      animation: float 2s ease-in-out infinite;
+      margin-bottom: 28px;
+    }
+    .yes-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      font-style: italic;
+      color: #ffe4e4;
+      margin-bottom: 16px;
+    }
+    .yes-sub {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: #f9c6c6;
+      font-style: italic;
+      max-width: 480px;
+      line-height: 1.8;
+    }
+    .yes-close {
+      margin-top: 40px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 10px 28px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .yes-close:hover { background: rgba(255,255,255,0.1); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .signature {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: var(--rose);
+      margin-top: 36px;
+      text-align: right;
+      display: block;
+    }
+
+    #music-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 500;
+      background: var(--rose);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(192,57,43,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(192,57,43,0.55);
+    }
+
+    @media (max-width: 480px) {
+      .story-card { padding: 36px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="petals-bg" id="petalsContainer"></div>
+
+  <iframe id="yt-player" src="https://www.youtube.com/embed/MVrPhW8933U?autoplay=1&loop=1&playlist=MVrPhW8933U&controls=0&mute=0" allow="autoplay" style="display:none" tabindex="-1"></iframe>
+
+  <button id="music-btn" onclick="toggleMusic()" title="Toggle music">🎵</button>
+
+  <div id="yes-overlay">
+    <div class="yes-roses">🌹🌹🌹🌹🌹</div>
+    <div class="yes-title">She said Yes! 🥰</div>
+    <p class="yes-sub">
+      Thank you, Coline. From this day forward, I promise to be by your side. Through every smile, every laugh, and every beautiful moment still to come.
+    </p>
+    <button class="yes-close" onclick="closeOverlay()">← Back to the letter</button>
+  </div>
+
+  <section class="page" id="hero">
+    <div class="rose-bloom">🌹</div>
+    <h1 class="hero-name">For Coline</h1>
+    <p class="hero-sub">A message from the heart</p>
+    <span class="scroll-hint">↓ &nbsp; read on &nbsp; ↓</span>
+  </section>
+
+  <section class="page" id="story" style="background: white;">
+    <div class="story-card reveal">
+      <span class="section-label">A letter for you</span>
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-icon">🌹</span>
+        <div class="divider-line"></div>
+      </div>
+      <p class="story-text">
+        I still remember the first time we had lunch together. That smile on your face, Coline, it was special. Deep down, I already had a feeling you would become someone very important to me.
+      </p>
+      <div class="roses-row" id="roseRow"></div>
+      <p class="story-text">
+        Four months later, here we are. Dami na natin nalaman sa isa't isa, and we've shared so many fun moments together going to different places, trying new food, and just enjoying each other's company.
+      </p>
+      <p class="story-text" style="margin-top: 24px;">
+        What I appreciate the most are ung mga simple moments with you. The conversations, the laughs, and the time we spend together. Getting to know you more made me realize how lucky I am to have you in my life.
+      </p>
+      <p class="story-text" style="margin-top: 24px;">
+        I want to take this chance to ask you. Will you be my girlfriend? I want to be someone who takes care of you, supports you, and continues making beautiful memories with you.
+      </p>
+      <p class="story-text" style="margin-top: 24px;">
+        I know we're not perfect, and there will be days that are difficult. But I promise that I will always try my best to understand you, support you, and grow with you. I want to be someone na you can rely on. Someone who will stay beside you through the good days and the challenging ones.
+      </p>
+      <span class="signature">— always yours 🌹</span>
+    </div>
+  </section>
+
+  <section class="page" id="question">
+    <div class="reveal" style="display:flex; flex-direction:column; align-items:center;">
+      <div class="question-rose">🌹</div>
+      <p class="question-text">
+        So… will you be my girlfriend,<br/>Coline?
+      </p>
+      <div class="btn-group">
+        <button class="btn btn-yes" onclick="sayYes()">Yes, of course! 🌹</button>
+        <button class="btn btn-no" onclick="moveNoBtn(this)">Maybe later…</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let musicPlaying = true;
+    function toggleMusic() {
+      const player = document.getElementById('yt-player');
+      const btn = document.getElementById('music-btn');
+      if (musicPlaying) {
+        player.src = player.src.replace('autoplay=1', 'autoplay=0');
+        btn.textContent = '🔇';
+      } else {
+        player.src = player.src.replace('autoplay=0', 'autoplay=1');
+        btn.textContent = '🎵';
+      }
+      musicPlaying = !musicPlaying;
+    }
+
+    const container = document.getElementById('petalsContainer');
+    const petalSymbols = ['🌸', '🌺', '❤️', '🌹'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = petalSymbols[i % petalSymbols.length];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (8 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      p.style.fontSize = (0.8 + Math.random() * 1) + 'rem';
+      container.appendChild(p);
+    }
+
+    const roseRow = document.getElementById('roseRow');
+    const roseCount = 7;
+    for (let i = 0; i < roseCount; i++) {
+      const r = document.createElement('span');
+      r.className = 'rose-item';
+      r.textContent = '🌹';
+      r.style.animationDelay = (0.4 + i * 0.12) + 's';
+      roseRow.appendChild(r);
+    }
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    reveals.forEach(el => observer.observe(el));
+
+    function sayYes() {
+      document.getElementById('yes-overlay').classList.add('yes-overlay-active');
+      document.getElementById('yes-overlay').style.display = 'flex';
+    }
+    function closeOverlay() {
+      document.getElementById('yes-overlay').classList.remove('yes-overlay-active');
+      document.getElementById('yes-overlay').style.display = 'none';
+    }
+
+    let noMoves = 0;
+    function moveNoBtn(btn) {
+      noMoves++;
+      const labels = ['Hmm, think again 😅', 'Are you sure? 🌹', 'Please? 🥺', 'Okay fine… but 🌹'];
+      btn.textContent = labels[Math.min(noMoves - 1, labels.length - 1)];
+      const vw = window.innerWidth - btn.offsetWidth - 20;
+      const vh = window.innerHeight - btn.offsetHeight - 20;
+      btn.style.position = 'fixed';
+      btn.style.left = Math.max(10, Math.random() * vw) + 'px';
+      btn.style.top  = Math.max(10, Math.random() * vh) + 'px';
+      btn.style.zIndex = 100;
+      btn.style.transition = 'left 0.3s, top 0.3s';
+      if (noMoves >= 4) {
+        btn.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
