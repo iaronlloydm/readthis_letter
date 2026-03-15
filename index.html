@@ -218,14 +218,40 @@
       transition: width 0.55s ease;
       z-index: 10;
     }
+
+    #music-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10;
+      background: rgba(7,89,133,0.75);
+      color: white;
+      border: 1px solid rgba(56,189,248,0.4);
+      border-radius: 50%;
+      width: 46px;
+      height: 46px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(7,89,133,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(6px);
+    }
+    #music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 24px rgba(7,89,133,0.55);
+    }
   </style>
 </head>
 <body>
  
   <div id="bg"></div>
-  <div id="title">Memories</div>
+  <div id="title">Our Memories</div>
   <div id="counter">1 / 7</div>
   <div id="progress"></div>
+
+  <iframe id="yt-player" src="https://www.youtube.com/embed/k-81JmsgVs0?autoplay=1&loop=1&playlist=k-81JmsgVs0&controls=0&mute=0" allow="autoplay" style="display:none" tabindex="-1"></iframe>
+
+  <button id="music-btn" onclick="toggleMusic()" title="Toggle music">🎵</button>
  
   <div id="card" onclick="nextSlide(event)">
     <div id="img-wrap">
@@ -300,6 +326,20 @@
  
     let current = 0;
     let animating = false;
+
+    let musicPlaying = true;
+    function toggleMusic() {
+      const player = document.getElementById('yt-player');
+      const btn = document.getElementById('music-btn');
+      if (musicPlaying) {
+        player.src = player.src.replace('autoplay=1', 'autoplay=0');
+        btn.textContent = '🔇';
+      } else {
+        player.src = player.src.replace('autoplay=0', 'autoplay=1');
+        btn.textContent = '🎵';
+      }
+      musicPlaying = !musicPlaying;
+    }
  
     const bg       = document.getElementById('bg');
     const imgMain  = document.getElementById('img-main');
@@ -377,7 +417,6 @@
       wrap.appendChild(rip);
       rip.addEventListener('animationend', () => rip.remove());
 
-      // If on the last slide, redirect to next.html
       if (current === slides.length - 1) {
         progress.style.width = '100%';
         setTimeout(() => { window.location.href = 'pagetwo.html'; }, 500);
