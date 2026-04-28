@@ -326,7 +326,12 @@
   <div id="counter">1 / 9</div>
   <div id="progress"></div>
 
-  <iframe id="yt-player" src="https://www.youtube.com/watch?v=nNJkh92SwUk" allow="autoplay" style="display:none" tabindex="-1"></iframe>
+  <iframe id="yt-player"
+    src="https://www.youtube.com/embed/nNJkh92SwUk?autoplay=0&enablejsapi=1&loop=1&playlist=nNJkh92SwUk"
+    allow="autoplay"
+    style="display:none"
+    tabindex="-1">
+  </iframe>
 
   <button id="music-btn" onclick="toggleMusic()" title="Toggle music">🎵</button>
 
@@ -412,10 +417,9 @@
     let musicPlaying = false;
 
     function enterSite() {
-      const splash = document.getElementById('splash');
-      splash.classList.add('hidden');
+      document.getElementById('splash').classList.add('hidden');
       const player = document.getElementById('yt-player');
-      player.src = player.src.replace('autoplay=0', 'autoplay=1');
+      player.src = "https://www.youtube.com/embed/nNJkh92SwUk?autoplay=1&enablejsapi=1&loop=1&playlist=nNJkh92SwUk";
       musicPlaying = true;
     }
 
@@ -423,10 +427,10 @@
       const player = document.getElementById('yt-player');
       const btn = document.getElementById('music-btn');
       if (musicPlaying) {
-        player.src = player.src.replace('autoplay=1', 'autoplay=0');
+        player.src = "https://www.youtube.com/embed/nNJkh92SwUk?autoplay=0&enablejsapi=1&loop=1&playlist=nNJkh92SwUk";
         btn.textContent = '🔇';
       } else {
-        player.src = player.src.replace('autoplay=0', 'autoplay=1');
+        player.src = "https://www.youtube.com/embed/nNJkh92SwUk?autoplay=1&enablejsapi=1&loop=1&playlist=nNJkh92SwUk";
         btn.textContent = '🎵';
       }
       musicPlaying = !musicPlaying;
